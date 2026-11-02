@@ -30,6 +30,15 @@ const cats = [
   },
 ];
 
+//Köynnistää HTTP- palvelimen kuuntelemaan porttia
+app.listen(port, hostname, () => {
+  console.log(`Server running at http://${hostname}:${port}/`);
+});
+
+app.use(express.static('public'));
+
+app.use(express.json());
+
 app.get('/kissa', (req, res) => {
   res.send('Welcome to my REST API!');
 });
@@ -73,9 +82,7 @@ app.get('/api/v1/cats/:id', (req, res) => {
   }
 });
 
-app.use(express.static('public'));
-
-//Köynnistää HTTP- palvelimen kuuntelemaan porttia
-app.listen(port, hostname, () => {
-  console.log(`Server running at http://${hostname}:${port}/`);
+app.post('/api/v1/cats', (req, res) => {
+  console.log(req.body);
+  res.sendStatus(201);
 });
