@@ -1,0 +1,8 @@
+#api http test requests for VScode
+
+### get cats
+
+GET http://127.0.0.1:3000/api/v1/cats
+
+### get cat by id
+GET http://127.0.0.1:3000/api/v1/cats/1
