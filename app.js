@@ -44,11 +44,23 @@ app.get('/api/v1/cats/:id', (req, res) => {
   //console.log(req);
   console.log('path variables', req.params);
 
+  const id = Number(req.params.id);
+
+  //find palauttaa ensimmäisen löytyneen olion tai undefined
+  const cat = cats.find((cat) => cat.cat_id === id);
+
+  if (!cat) {
+    return res.status(404).json({message: 'Kissaa ei löytynyt!'});
+  } else {
+    res.json(cat);
+  }
+
+  /*
   for (let cat of cats) {
-    if (req.params.id == cat.cat_id) {
+    if (id === cat.cat_id) {
       res.json(cat);
     }
-  }
+  }*/
 
   if (req.params.id === '99') {
     const myData = {
