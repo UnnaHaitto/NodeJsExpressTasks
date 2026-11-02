@@ -6,3 +6,15 @@ GET http://127.0.0.1:3000/api/v1/cats
 
 ### get cat by id
 GET http://127.0.0.1:3000/api/v1/cats/1
+
+### post new cat
+POST http://127.0.0.1:3000/api/v1/cats
+Content-Type: application/json
+
+  {
+    "name": "Rolle",
+    "birth_date": "10.22.2026",
+    "weight": 6,
+    "owner": "Minna",
+    "img": "https://loremflickr.com/320/240/cat"
+  }
