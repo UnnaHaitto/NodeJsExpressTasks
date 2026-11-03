@@ -9,6 +9,7 @@ import {
 import logger from '../middlevares/logger.js';
 
 import multer from 'multer';
+import {createThumbnail} from '../middlevares/upload.js';
 const upload = multer({dest: 'uploads/'});
 
 const catRouter = express.Router();
@@ -18,7 +19,7 @@ const catRouter = express.Router();
 catRouter
   .route('/')
   .get(logger, getAllCats)
-  .post(upload.single('file'), postCat);
+  .post(upload.single('file'), createThumbnail, postCat);
 // Kaikki /api/v1/cats/:id reitit
 catRouter.route('/:id').get(getCatById).delete(deleteCat).put(putCat);
 
