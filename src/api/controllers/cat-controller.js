@@ -3,11 +3,20 @@ import {
   addCat,
   removeCat,
   modifyCat,
-  cats,
+  listAllCats,
 } from '../models/cat-model.js';
 
 const getAllCats = (req, res) => {
-  res.json(cats);
+  console.log('ollaan nyt controllerissa');
+
+  const cats = listAllCats();
+
+  // esimerkki siitä että middleware on muokannut req-oliota
+  res.json({
+    message: 'Kaikki kissat',
+    time: req.requestTime,
+    cats: cats,
+  });
 };
 
 const getCatById = (req, res) => {
@@ -23,9 +32,20 @@ const getCatById = (req, res) => {
 };
 
 const postCat = (req, res) => {
+  console.log('request', req.file);
   console.log('request', req.body);
-  const id = addCat(req.body);
-  res.status(201).json({message: 'Kissa lisätty', cat_id: id});
+  console.log(req.file.filename);
+  req.body.filename = req.file.filename;
+
+  const result = addCat(req.body);
+  if (result) {
+    res.status(201);
+    res.json({message: 'New cat added.', result});
+  } else {
+    res.sendStatus(400);
+  }
+  //const id = addCat(req.body);
+  //res.status(201).json({message: 'Kissa lisätty', cat_id: id});
 };
 
 const deleteCat = (req, res) => {

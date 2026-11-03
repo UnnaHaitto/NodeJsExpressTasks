@@ -3,10 +3,16 @@ const hostname = '127.0.0.1';
 const app = express();
 const port = 3000;
 import router from './api/index.js';
+import requestTime from './api/middlevares/request-time.js';
 
 app.use(express.static('public'));
 
+// middlewaret (myös express on sellainen) suoritetaan ennne reittejä
+app.use(requestTime);
 app.use(express.json());
+
+// Parses URL-encoded form data (like HTML forms)
+app.use(express.urlencoded({extended: true}));
 
 app.use('/api/v1', router);
 

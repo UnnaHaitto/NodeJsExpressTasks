@@ -4,8 +4,11 @@ node_modules
 .DS_Store
 # Dependencies
 node_modules/
-
 # Environment variables
 .env
 .env.*
 !.env.example
+ # ignore content of uploads folder
+ uploads/*
+ # except one (empty) file to have the folder in version control
+ !uploads/.gitkeep

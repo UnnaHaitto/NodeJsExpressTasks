@@ -8,11 +8,41 @@ import {
 } from '../controllers/cat-controller.js';
 import logger from '../middlevares/logger.js';
 
+import multer from 'multer';
+const upload = multer({dest: 'uploads/'});
+
 const catRouter = express.Router();
 
 // Kaikki /api/v1/cats reitit
-catRouter.route('/').get(logger, getAllCats).post(postCat);
+// reittikohtainen logger esimerkki
+catRouter
+  .route('/')
+  .get(logger, getAllCats)
+  .post(upload.single('file'), postCat);
 // Kaikki /api/v1/cats/:id reitit
 catRouter.route('/:id').get(getCatById).delete(deleteCat).put(putCat);
 
 export default catRouter;
+
+//kaikille reiteille middlevare
+
+// Multer on yksi tällainen middleware, joka osaa lukea multipart/form-data -pyynnöt ja tallentaa tiedostot serverille
+
+// Myöhemmin lisätään esim. autentikointi, virheenkäsittely.
+
+// upload.single('file'):
+// tallentaa tiedoston esim. uploads/-kansioon ja
+// lisää req.file-olion, jossa on esim.:
+
+// {
+//   fieldname: 'file',           // formin "name"
+//   originalname: 'image.jpg',   // alkuperäinen nimi
+//   encoding: '7bit',
+//   mimetype: 'image/jpeg',
+//   destination: 'uploads/',     // mihin tallennettiin
+//   filename: 'a8f9234bd12.jpg', // generoitu nimi levyllä
+//   path: 'uploads/a8f9234bd12.jpg',
+//   size: 12345
+// }
+
+// Kaikki muut kentät (cat_name, weight, …) menevät  req.body-olioon.
