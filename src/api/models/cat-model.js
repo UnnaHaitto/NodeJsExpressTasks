@@ -63,4 +63,4 @@ const modifyCat = (id, newDetails) => {
   return index !== -1;
 };
 
-export {listAllCats, findCatById, addCat, removeCat, modifyCat};
+export {listAllCats, findCatById, addCat, removeCat, modifyCat, cats};
