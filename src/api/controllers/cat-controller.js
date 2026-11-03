@@ -1,7 +1,7 @@
 import {
   cats,
   findCatById,
-  listAllCats,
+  addCat,
   modifyCat,
   removeCat,
 } from '../models/cat-model.js';
