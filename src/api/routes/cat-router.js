@@ -6,7 +6,7 @@ import {
   postCat,
   putCat,
 } from '../controllers/cat-controller.js';
-import logger from '../middlevares/logger.js';
+import logger from '../middlewares/logger.js';
 
 import multer from 'multer';
 const upload = multer({dest: 'uploads/'});
