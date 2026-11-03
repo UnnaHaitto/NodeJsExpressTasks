@@ -1,9 +1,9 @@
 import {
-  cats,
   findCatById,
-  listAllCats,
-  modifyCat,
+  addCat,
   removeCat,
+  modifyCat,
+  cats,
 } from '../models/cat-model.js';
 
 const getAllCats = (req, res) => {
