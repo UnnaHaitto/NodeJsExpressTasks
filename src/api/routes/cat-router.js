@@ -8,10 +8,17 @@ import {
 } from '../controllers/cat-controller.js';
 import logger from '../middlewares/logger.js';
 
+import multer from 'multer';
+const upload = multer({dest: 'uploads/'});
+
 const catRouter = express.Router();
 
 // Kaikki /api/v1/cats reitit
-catRouter.route('/').get(logger, getAllCats).post(postCat);
+// reittikohtainen logger esimerkki
+catRouter
+  .route('/')
+  .get(logger, getAllCats)
+  .post(upload.single('file'), postCat);
 // Kaikki /api/v1/cats/:id reitit
 catRouter.route('/:id').get(getCatById).delete(deleteCat).put(putCat);
 
