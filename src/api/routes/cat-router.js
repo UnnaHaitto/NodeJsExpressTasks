@@ -6,19 +6,12 @@ import {
   postCat,
   putCat,
 } from '../controllers/cat-controller.js';
-import logger from '../middlevares/logger.js';
-
-import multer from 'multer';
-const upload = multer({dest: 'uploads/'});
+import logger from '../middlewares/logger.js';
 
 const catRouter = express.Router();
 
 // Kaikki /api/v1/cats reitit
-// reittikohtainen logger esimerkki
-catRouter
-  .route('/')
-  .get(logger, getAllCats)
-  .post(upload.single('file'), postCat);
+catRouter.route('/').get(logger, getAllCats).post(postCat);
 // Kaikki /api/v1/cats/:id reitit
 catRouter.route('/:id').get(getCatById).delete(deleteCat).put(putCat);
 
