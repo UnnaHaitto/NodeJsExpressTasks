@@ -1,6 +1,6 @@
 const cats = [
   {
-    cat_id: 1,
+    cat_id: 3,
     name: 'Misu',
     birth_date: '10.10.2026',
     weight: 10,
@@ -16,9 +16,9 @@ const cats = [
     img: 'https://loremflickr.com/320/240/cat',
   },
   {
-    cat_id: 3,
+    cat_id: 1,
     name: 'Molli',
-    birth_date: '10.10.2022',
+    birth_date: '10.10.2012',
     weight: 14,
     owner: 'Jukka',
     img: 'https://loremflickr.com/320/240/cat',

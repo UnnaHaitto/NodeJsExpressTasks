@@ -1,7 +1,6 @@
 # api http test requests for VSCode
 @apiUrl = http://127.0.0.1:3000/api/v1
 
-
 ### get cats
 GET {{apiUrl}}/cats
 
@@ -34,3 +33,11 @@ Content-Type: application/json
 
 ### delete cat by id
 DELETE {{apiUrl}}/cats/8
+
+#USER TESTS START HERE
+
+### get users
+GET {{apiUrl}}/users
+
+### get user by id
+GET {{apiUrl}}/users/900
