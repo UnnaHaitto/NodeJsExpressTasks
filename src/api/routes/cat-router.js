@@ -6,10 +6,10 @@ import {
   postCat,
   putCat,
 } from '../controllers/cat-controller.js';
-import logger from '../middlevares/logger.js';
+import logger from '../middlewares/logger.js';
 
 import multer from 'multer';
-import {createThumbnail} from '../middlevares/upload.js';
+import {createThumbnail} from '../middlewares/upload.js';
 const upload = multer({dest: 'uploads/'});
 
 const catRouter = express.Router();
@@ -25,7 +25,7 @@ catRouter.route('/:id').get(getCatById).delete(deleteCat).put(putCat);
 
 export default catRouter;
 
-//kaikille reiteille middlevare
+//kaikille reiteille middleware
 
 // Multer on yksi tällainen middleware, joka osaa lukea multipart/form-data -pyynnöt ja tallentaa tiedostot serverille
 

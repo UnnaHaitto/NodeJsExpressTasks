@@ -3,7 +3,7 @@ const hostname = '127.0.0.1';
 const app = express();
 const port = 3000;
 import router from './api/index.js';
-import requestTime from './api/middlevares/request-time.js';
+import requestTime from './api/middlewares/request-time.js';
 
 app.use(express.static('public'));
 
