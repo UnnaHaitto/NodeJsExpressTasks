@@ -25,29 +25,29 @@ const getUserById = (req, res) => {
 const deleteUser = (req, res) => {
   const removed = removeUser(Number(req.params.id));
 
-  if (!removed) {
-    return res.status(404).json({message: 'The user was not found'});
+  if (removed) {
+    res.json({message: 'user item deleted.'});
   } else {
-    return res.status(201).json({message: 'User item deleted.'});
+    res.status(404).json({message: 'The user was not found'});
   }
 };
 
 const setUser = (req, res) => {
-  const set = putUser(req.params.id);
+  const set = putUser(Number(req.params.id), req.body);
 
-  if (!set) {
-    return res.status(404).json({message: 'New user data not found'});
+  if (set) {
+    res.json({message: 'User item updated.'});
   } else {
-    return res.status(201).json({message: 'User item updated.'});
+    res.status(404).json({message: 'User was not found.'});
   }
 };
 
 const postUser = (req, res) => {
+  console.log('request', req.body);
+
   const userId = addUser(req.body);
 
-  return res
-    .status(201)
-    .json({message: 'User added succesfully', User: userId});
+  res.status(201).json({message: 'User added succesfully', User: userId});
 };
 
 export {getAllUsers, getUserById, deleteUser, setUser, postUser};

@@ -42,9 +42,7 @@ const findUserById = (id) => {
 };
 
 const removeUser = (id) => {
-  const index = userItems.findIndex((user) => {
-    user.user_id == id;
-  });
+  const index = userItems.findIndex((user) => user.user_id == id);
 
   userItems.splice(index, 1);
 
@@ -69,9 +67,7 @@ const addUser = (user) => {
 };
 
 const putUser = (id, content) => {
-  const index = userItems.findIndex((user) => {
-    user.user_id == id;
-  });
+  const index = userItems.findIndex((user) => user.user_id == id);
 
   userItems[index] = {...userItems[index], ...content};
 
