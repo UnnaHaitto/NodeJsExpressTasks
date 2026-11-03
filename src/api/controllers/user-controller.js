@@ -1,13 +1,19 @@
-import {userItems, getUserById} from '../models/user-model.js';
+import {
+  userItems,
+  findUserById,
+  removeUser,
+  putUser,
+  addUser,
+} from '../models/user-model.js';
 
 const getAllUsers = (req, res) => {
   res.json(userItems);
 };
 
 const getUserById = (req, res) => {
-  const id = Number(req.param.id);
+  const id = Number(req.params.id);
 
-  const user = getUserById(id);
+  const user = findUserById(id);
 
   if (!user) {
     return res.status(404).json({message: 'The user was not found!'});
@@ -16,4 +22,32 @@ const getUserById = (req, res) => {
   res.json(user);
 };
 
-export {getAllUsers, getUserById};
+const deleteUser = (req, res) => {
+  const removed = removeUser(Number(req.params.id));
+
+  if (!removed) {
+    return res.status(404).json({message: 'The user was not found'});
+  } else {
+    return res.status(201).json({message: 'User item deleted.'});
+  }
+};
+
+const setUser = (req, res) => {
+  const set = putUser(req.params.id);
+
+  if (!set) {
+    return res.status(404).json({message: 'New user data not found'});
+  } else {
+    return res.status(201).json({message: 'User item updated.'});
+  }
+};
+
+const postUser = (req, res) => {
+  const userId = addUser(req.body);
+
+  return res
+    .status(201)
+    .json({message: 'User added succesfully', User: userId});
+};
+
+export {getAllUsers, getUserById, deleteUser, setUser, postUser};

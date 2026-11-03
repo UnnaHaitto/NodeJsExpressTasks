@@ -40,4 +40,30 @@ DELETE {{apiUrl}}/cats/8
 GET {{apiUrl}}/users
 
 ### get user by id
-GET {{apiUrl}}/users/900
+GET {{apiUrl}}/users/2001
+
+### change user details ////
+PUT {{apiUrl}}/users/1999
+Content-Type: application/json
+
+{
+"name": "Marjatta Mikkola",
+"username": "marjattamikkola",
+"email": "marjattam@metropolia.fi",
+"password": "password"
+}
+
+### add new user
+POST {{apiUrl}}/users
+Content-Type: application/json
+
+{
+"name": "Marjatta Mikkola",
+"username": "marjattamikkola",
+"email": "marjattam@metropolia.fi",
+"role": "manager",
+"password": "password"
+}
+
+### delete user by id ////
+DELETE {{apiUrl}}/users/900
