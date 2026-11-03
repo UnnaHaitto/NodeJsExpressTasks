@@ -37,6 +37,14 @@ const deleteCat = (req, res) => {
   }
 };
 
-//const putCat = (req, res) => {
+const putCat = (req, res) => {
+  // in real life, all input data (req.body) should be validated before using it
+  const result = modifyCat(Number(req.params.id), req.body);
+  if (result) {
+    res.json({message: 'Cat updated!'});
+  } else {
+    res.status(404).json({error: 404, message: 'Not found.'});
+  }
+};
 
-export {getAllCats, getCatById, listAllCats, modifyCat, deleteCat, postCat};
+export {getAllCats, getCatById, postCat, deleteCat, putCat};
