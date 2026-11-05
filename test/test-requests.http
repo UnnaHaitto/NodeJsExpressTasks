@@ -6,7 +6,7 @@
 GET {{apiUrl}}/cats
 
 ### get cat by id
-GET {{apiUrl}}/cats/8
+GET {{apiUrl}}/cats/43
 
 ### get cat by id (FAIL: not found)
 GET {{apiUrl}}/cats/98
@@ -24,16 +24,16 @@ Content-Type: application/json
 }
 
 ### edit existing cat
-PUT {{apiUrl}}/cats/8
+PUT {{apiUrl}}/cats/43
 Content-Type: application/json
 
 {
     "weight": 6,
-    "owner": "Uusi omistaja"
+    "owner": 37
 }
 
 ### delete cat by id
-DELETE {{apiUrl}}/cats/8
+DELETE {{apiUrl}}/cats/43
 
 ### post cat with image
 POST http://127.0.0.1:3000/api/v1/cats HTTP/1.1
@@ -50,7 +50,7 @@ Content-Disposition: form-data; name="weight"
 --MyBoundary
 Content-Disposition: form-data; name="owner"
 
-3602
+37
 --MyBoundary
 Content-Disposition: form-data; name="birthdate"
 
