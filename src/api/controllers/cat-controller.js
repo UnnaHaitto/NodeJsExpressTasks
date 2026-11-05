@@ -40,7 +40,7 @@ const postCat = async (req, res) => {
   console.log('request', req.file);
   console.log('request', req.body);
   //console.log(req.file.filename);
-  req.body.filename = req.file.filename;
+  req.body.filename = req.file ? req.file.filename : req.body.filename;
 
   const result = await addCat(req.body);
   if (result) {
