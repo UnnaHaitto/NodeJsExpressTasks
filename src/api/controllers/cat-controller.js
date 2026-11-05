@@ -6,23 +6,28 @@ import {
   listAllCats,
 } from '../models/cat-model.js';
 
-const getAllCats = (req, res) => {
+const getAllCats = async (req, res) => {
   console.log('ollaan nyt controllerissa');
 
-  const cats = listAllCats();
+  try {
+    const cats = await listAllCats();
+    res.json(cats);
+  } catch (error) {
+    console.error('Error fetching cats: ', error);
+    res.status(500).json({message: 'Error while fetching cats'});
+  }
 
   // esimerkki siitä että middleware on muokannut req-oliota
+  /*
   res.json({
     message: 'Kaikki kissat',
     time: req.requestTime,
     cats: cats,
-  });
+  });*/
 };
 
-const getCatById = (req, res) => {
-  const id = Number(req.params.id);
-
-  const cat = findCatById(id);
+const getCatById = async (req, res) => {
+  const cat = await findCatById(req.params.id);
 
   if (!cat) {
     return res.status(404).json({message: 'Kissaa ei löytynyt!'});
@@ -31,13 +36,13 @@ const getCatById = (req, res) => {
   res.json(cat);
 };
 
-const postCat = (req, res) => {
+const postCat = async (req, res) => {
   console.log('request', req.file);
   console.log('request', req.body);
   //console.log(req.file.filename);
-  //req.body.filename = req.file.filename;
+  req.body.filename = req.file.filename;
 
-  const result = addCat(req.body);
+  const result = await addCat(req.body);
   if (result) {
     res.status(201);
     res.json({message: 'New cat added.', result});
@@ -48,8 +53,8 @@ const postCat = (req, res) => {
   //res.status(201).json({message: 'Kissa lisätty', cat_id: id});
 };
 
-const deleteCat = (req, res) => {
-  const result = removeCat(Number(req.params.id));
+const deleteCat = async (req, res) => {
+  const result = await removeCat(Number(req.params.id));
   if (result) {
     res.json({message: 'Kissa poistettu'});
   } else {
@@ -57,9 +62,9 @@ const deleteCat = (req, res) => {
   }
 };
 
-const putCat = (req, res) => {
+const putCat = async (req, res) => {
   // in real life, all input data (req.body) should be validated before using it
-  const result = modifyCat(Number(req.params.id), req.body);
+  const result = await modifyCat(Number(req.params.id), req.body);
   if (result) {
     res.json({message: 'Cat updated!'});
   } else {
