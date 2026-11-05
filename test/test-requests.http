@@ -19,7 +19,7 @@ Content-Type: application/json
     "cat_name": "Rolle",
     "birthdate": "2022-10-10",
     "weight": 4,
-    "owner": "Tiina",
+    "owner": "37",
     "filename": "https://placecats.com/310/240"
 }
 
