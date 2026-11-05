@@ -16,6 +16,7 @@ const catRouter = express.Router();
 
 // Kaikki /api/v1/cats reitit
 // reittikohtainen logger esimerkki
+//SAVE TO UPLOADS
 catRouter
   .route('/')
   .get(logger, getAllCats)
