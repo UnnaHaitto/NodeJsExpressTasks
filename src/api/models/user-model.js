@@ -33,12 +33,12 @@ const removeUser = async (id) => {
 };
 
 const addUser = async (user) => {
-  const {role, name, username, email, password} = user;
+  const {name, username, email, password, role} = user;
 
   const sql =
-    'INSERT INTO wsk_users (role, name, username, email, password) VALUES (?, ?, ?, ?, ?)';
+    'INSERT INTO wsk_users (name, username, email, password, role) VALUES (?, ?, ?, ?, ?)';
 
-  const values = [role, name, username, email, password];
+  const values = [name, username, email, password, role];
 
   const [rows] = await promisePool.execute(sql, values);
 
