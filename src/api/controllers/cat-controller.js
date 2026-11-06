@@ -7,7 +7,7 @@ import {
 } from '../models/cat-model.js';
 
 const getAllCats = async (req, res) => {
-  console.log('ollaan nyt controllerissa');
+  //console.log('ollaan nyt controllerissa');
 
   try {
     const cats = await listAllCats();
