@@ -50,7 +50,7 @@ Content-Disposition: form-data; name="weight"
 --MyBoundary
 Content-Disposition: form-data; name="owner"
 
-37
+40
 --MyBoundary
 Content-Disposition: form-data; name="birthdate"
 
@@ -61,3 +61,38 @@ Content-Type: image/jpeg
 
 < ./images.jpeg
 --MyBoundary--
+
+#USER TESTS START HERE
+
+### get users
+GET {{apiUrl}}/users
+
+### get user by id
+GET {{apiUrl}}/users/37
+
+### add new user
+POST {{apiUrl}}/users
+Content-Type: application/json
+
+{
+"name": "Marjatta Mattila",
+"username": "marjattaMattila",
+"email": "marjattam@metropolia.fi",
+"password": "password",
+"role": "manager"
+}
+
+### change user details ////
+PUT {{apiUrl}}/users/38
+Content-Type: application/json
+
+{
+"name": "Marjatta Mikkola",
+"username": "marjattamikkola",
+"email": "marjattam@metropolia.fi",
+"password": "password",
+"role": "user"
+}
+
+### delete user by id ////
+DELETE {{apiUrl}}/users/40

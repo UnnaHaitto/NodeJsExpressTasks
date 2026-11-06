@@ -24,7 +24,7 @@ const removeUser = async (id) => {
 
   try {
     await connection.beginTransaction();
-    await connection.execute('DELETE FROM wsk_cats WHERE user_id = ?;', [id]);
+    await connection.execute('DELETE FROM wsk_cats WHERE owner = ?;', [id]);
     const sql = connection.format('DELETE FROM wsk_users WHERE user_id = ?;', [
       id,
     ]);
@@ -41,8 +41,8 @@ const removeUser = async (id) => {
     return {message: 'User deleted'};
   } catch (error) {
     await connection.rollback();
-    console.log('Error: ', error.message());
-    return {message: error.message()};
+    console.log('Error: ', error.message);
+    return {message: error.message};
   } finally {
     connection.release();
   }
@@ -59,11 +59,11 @@ const addUser = async (user) => {
   const [rows] = await promisePool.execute(sql, values);
 
   console.log('rows: ', rows);
-  if (rows[0].affectedRows === 0) {
+  if (rows.affectedRows === 0) {
     return false;
   }
 
-  return {user_id: rows[0].insertId};
+  return {user_id: rows.insertId};
 };
 
 const putUser = async (id, content) => {
@@ -74,7 +74,7 @@ const putUser = async (id, content) => {
 
   const [rows] = await promisePool.execute(sql);
 
-  if (rows[0].affectedRows === 0) {
+  if (rows.affectedRows === 0) {
     return false;
   }
 
