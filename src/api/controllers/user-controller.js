@@ -5,6 +5,7 @@ import {
   putUser,
   addUser,
 } from '../models/user-model.js';
+import bcrypt from 'bcrypt';
 
 const getAllUsers = async (req, res) => {
   try {
@@ -50,6 +51,8 @@ const setUser = async (req, res) => {
 
 const postUser = async (req, res) => {
   console.log('request', req.body);
+
+  req.body.password = bcrypt.hashSync(req.body.password, 10);
 
   const userId = await addUser(req.body);
 

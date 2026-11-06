@@ -8,6 +8,7 @@ import {
   getCatByUserId,
 } from '../controllers/cat-controller.js';
 import logger from '../middlewares/logger.js';
+import {authenticateToken} from '../middlewares/authentication.js';
 
 import multer from 'multer';
 import {createThumbnail} from '../middlewares/upload.js';
@@ -23,7 +24,11 @@ catRouter
   .get(logger, getAllCats)
   .post(upload.single('file'), createThumbnail, postCat);
 // Kaikki /api/v1/cats/:id reitit
-catRouter.route('/:id').get(getCatById).delete(deleteCat).put(putCat);
+catRouter
+  .route('/:id')
+  .get(authenticateToken, getCatById)
+  .delete(authenticateToken, deleteCat)
+  .put(authenticateToken, putCat);
 catRouter.route('/user/:userId').get(getCatByUserId);
 
 export default catRouter;

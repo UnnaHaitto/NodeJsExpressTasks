@@ -98,4 +98,18 @@ Content-Type: application/json
 }
 
 ### delete user by id ////
-DELETE {{apiUrl}}/users/40
+DELETE {{apiUrl}}/users/48
+
+### Post login
+# @name login
+POST {{apiUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "username": "marjattaMattila",
+  "password": "password"
+}
+
+### get my user info
+GET {{apiUrl}}/auth/me
+Authorization: Bearer {{login.response.body.token}}
