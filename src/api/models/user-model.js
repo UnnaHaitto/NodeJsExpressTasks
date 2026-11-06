@@ -32,6 +32,7 @@ const removeUser = async (id) => {
     const [result] = await connection.execute(sql);
 
     if (result.affectedRows === 0) {
+      await connection.rollback();
       return {message: 'User not deleted!'};
     }
 
