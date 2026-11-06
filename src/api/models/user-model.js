@@ -1,4 +1,4 @@
-import promisePool from '../../utils/database';
+import promisePool from '../../utils/database.js';
 
 const getUsers = async () => {
   const [rows] = await promisePool.query('SELECT * FROM wsk_users');
