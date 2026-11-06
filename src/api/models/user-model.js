@@ -20,16 +20,16 @@ const findUserById = async (id) => {
 };
 
 const removeUser = async (id) => {
-  const connection = promisePool.getConnection();
+  const connection = await promisePool.getConnection();
 
   try {
     await connection.beginTransaction();
-    await connection.execute('DELETE * FROM wsk_cats WHERE user_id = ?;', [id]);
+    await connection.execute('DELETE FROM wsk_cats WHERE user_id = ?;', [id]);
     const sql = connection.format('DELETE FROM wsk_users WHERE user_id = ?;', [
       id,
     ]);
 
-    const result = await connection.execute(sql);
+    const [result] = await connection.execute(sql);
 
     if (result.affectedRows === 0) {
       return {message: 'User not deleted!'};
