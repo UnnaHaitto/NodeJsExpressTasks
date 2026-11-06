@@ -4,6 +4,17 @@ import promisePool from '../../utils/database.js';
 
 const listAllCats = async () => {
   const [rows] = await promisePool.query('SELECT * FROM wsk_cats');
+
+  for (let i = 0; i < rows.length; i++) {
+    let user_id = rows[i].owner;
+
+    const [userRows] = await promisePool.execute(
+      'SELECT name FROM wsk_users WHERE user_id = ?',
+      [user_id]
+    );
+
+    rows[i].owner_name = userRows[0];
+  }
   console.log('rows', rows);
   return rows;
 };
@@ -13,6 +24,16 @@ const findCatById = async (id) => {
     'SELECT * FROM wsk_cats WHERE cat_id = ?',
     [id]
   );
+
+  let user_id = rows[0].owner;
+
+  const [userRows] = await promisePool.execute(
+    'SELECT name FROM wsk_users WHERE user_id = ?',
+    [user_id]
+  );
+
+  rows[0].owner_name = userRows[0];
+
   console.log('rows', rows);
   if (rows.length === 0) {
     return false;

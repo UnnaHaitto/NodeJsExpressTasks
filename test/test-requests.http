@@ -6,7 +6,7 @@
 GET {{apiUrl}}/cats
 
 ### get cat by id
-GET {{apiUrl}}/cats/43
+GET {{apiUrl}}/cats/46
 
 ### get cat by id (FAIL: not found)
 GET {{apiUrl}}/cats/98
