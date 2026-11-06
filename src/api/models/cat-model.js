@@ -3,36 +3,22 @@
 import promisePool from '../../utils/database.js';
 
 const listAllCats = async () => {
-  const [rows] = await promisePool.query('SELECT * FROM wsk_cats');
+  const [rows] = await promisePool.query(
+    'SELECT wsk_cats.*, wsk_users.name FROM wsk_cats INNER JOIN wsk_users ON wsk_cats.owner = wsk_users.user_id'
+  );
 
-  for (let i = 0; i < rows.length; i++) {
-    let user_id = rows[i].owner;
-
-    const [userRows] = await promisePool.execute(
-      'SELECT name FROM wsk_users WHERE user_id = ?',
-      [user_id]
-    );
-
-    rows[i].owner_name = userRows[0];
-  }
   console.log('rows', rows);
+  if (rows.length === 0) {
+    return false;
+  }
   return rows;
 };
 
 const findCatById = async (id) => {
   const [rows] = await promisePool.execute(
-    'SELECT * FROM wsk_cats WHERE cat_id = ?',
+    'SELECT wsk_cats.*, wsk_users.name FROM wsk_cats INNER JOIN wsk_users ON wsk_cats.owner = wsk_users.user_id WHERE wsk_cats.cat_id = ?',
     [id]
   );
-
-  let user_id = rows[0].owner;
-
-  const [userRows] = await promisePool.execute(
-    'SELECT name FROM wsk_users WHERE user_id = ?',
-    [user_id]
-  );
-
-  rows[0].owner_name = userRows[0];
 
   console.log('rows', rows);
   if (rows.length === 0) {
@@ -79,4 +65,17 @@ const removeCat = async (id) => {
   return {message: 'success'};
 };
 
-export {listAllCats, findCatById, addCat, modifyCat, removeCat};
+const catByUserId = async (userId) => {
+  const [rows] = await promisePool.execute(
+    'SELECT wsk_cats.*, wsk_users.name FROM wsk_cats INNER JOIN wsk_users ON wsk_cats.owner = wsk_users.user_id WHERE wsk_cats.owner = ?',
+    [userId]
+  );
+
+  console.log('rows', rows);
+  if (rows.length === 0) {
+    return false;
+  }
+  return rows;
+};
+
+export {listAllCats, findCatById, addCat, modifyCat, removeCat, catByUserId};
