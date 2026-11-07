@@ -5,7 +5,6 @@ import {
   modifyCat,
   listAllCats,
   catByUserId,
-  getCatUserId,
 } from '../models/cat-model.js';
 
 const getAllCats = async (req, res) => {
