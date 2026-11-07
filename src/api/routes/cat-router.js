@@ -10,9 +10,7 @@ import {
 import logger from '../middlewares/logger.js';
 import {authenticateToken} from '../middlewares/authentication.js';
 
-import multer from 'multer';
-import {createThumbnail} from '../middlewares/upload.js';
-const upload = multer({dest: 'uploads/'});
+import {createThumbnail, upload} from '../middlewares/upload.js';
 
 const catRouter = express.Router();
 

@@ -126,3 +126,41 @@ Content-Type: application/json
 ### get my user info
 GET {{apiUrl}}/auth/me
 Authorization: Bearer {{login.response.body.token}}
+
+# ERROR TESTING STARTS HERE
+
+### post empty user
+POST {{apiUrl}}/users
+Authorization: Bearer {{login.response.body.token}}
+
+### post empty cat
+POST {{apiUrl}}/cats
+Authorization: Bearer {{login.response.body.token}}
+
+### post cat with invalid file (FAIL: only images and videos allowed)
+POST {{apiUrl}}/cats
+Content-Type: multipart/form-data; boundary=MyBoundary
+Authorization: Bearer {{login.response.body.token}}
+
+--MyBoundary
+Content-Disposition: form-data; name="cat_name"
+
+TestCat
+--MyBoundary
+Content-Disposition: form-data; name="weight"
+
+6
+--MyBoundary
+Content-Disposition: form-data; name="owner"
+
+53
+--MyBoundary
+Content-Disposition: form-data; name="birthdate"
+
+2023-10-08
+--MyBoundary
+Content-Disposition: form-data; name="file"; filename="document.pdf"
+Content-Type: application/pdf
+
+< ./document.pdf
+--MyBoundary--

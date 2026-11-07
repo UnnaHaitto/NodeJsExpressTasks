@@ -45,10 +45,17 @@ const getCatById = async (req, res) => {
   res.json(cat);
 };
 
-const postCat = async (req, res) => {
+const postCat = async (req, res, next) => {
   console.log('request', req.file);
   console.log('request', req.body);
   //console.log(req.file.filename);
+
+  if (!req.file) {
+    const error = new Error('Invalid or missing file!');
+    error.status = 400;
+    next(error);
+  }
+
   req.body.filename = req.file ? req.file.filename : req.body.filename;
 
   const role = res.locals.user.role;
@@ -63,12 +70,12 @@ const postCat = async (req, res) => {
   });
 
   const result = await addCat(req.body, user_id, role);
-  if (result) {
-    res.status(201);
-    res.json({message: 'New cat added.', result});
-  } else {
-    res.sendStatus(400);
+  if (result.error) {
+    return next(new Error(result.error));
   }
+
+  res.status(201);
+  res.json({message: 'New cat added.', result});
   //const id = addCat(req.body);
   //res.status(201).json({message: 'Kissa lisätty', cat_id: id});
 };
