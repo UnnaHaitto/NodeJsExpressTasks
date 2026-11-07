@@ -32,14 +32,14 @@ const getCatById = async (req, res) => {
 
   const cat = await findCatById(req.params.id);
 
+  if (!cat) {
+    return res.status(404).json({message: 'Kissaa ei löytynyt!'});
+  }
+
   if (user_id !== cat.owner) {
     return res
       .status(403)
       .json({message: 'You do not have access to this cat.'});
-  }
-
-  if (!cat) {
-    return res.status(404).json({message: 'Kissaa ei löytynyt!'});
   }
 
   res.json(cat);
