@@ -2,10 +2,19 @@
 // How to handle errors in controller?
 import promisePool from '../../utils/database.js';
 
-const listAllCats = async () => {
-  const [rows] = await promisePool.query(
-    'SELECT wsk_cats.*, wsk_users.name FROM wsk_cats INNER JOIN wsk_users ON wsk_cats.owner = wsk_users.user_id'
-  );
+const listAllCats = async (role, currentUserId) => {
+  let sql = '';
+
+  if (role === 'user') {
+    sql = promisePool.format(
+      'SELECT wsk_cats.*, wsk_users.name FROM wsk_cats INNER JOIN wsk_users ON wsk_cats.owner = wsk_users.user_id WHERE wsk_users.user_id = ?',
+      [currentUserId]
+    );
+  } else if (role === 'admin') {
+    sql =
+      'SELECT wsk_cats.*, wsk_users.name FROM wsk_cats INNER JOIN wsk_users ON wsk_cats.owner = wsk_users.user_id';
+  }
+  const [rows] = await promisePool.query(sql);
 
   console.log('rows', rows);
   if (rows.length === 0) {
@@ -27,29 +36,43 @@ const findCatById = async (id) => {
   return rows[0];
 };
 
-const addCat = async (cat) => {
+const addCat = async (cat, currentUserId, role) => {
   const {cat_name, weight, owner, filename, birthdate} = cat;
-  const sql = `INSERT INTO wsk_cats (cat_name, weight, owner, filename, birthdate)
-               VALUES (?, ?, ?, ?, ?)`;
-  const params = [cat_name, weight, owner, filename, birthdate];
-  const rows = await promisePool.execute(sql, params);
+
+  let sql = '';
+
+  let params = [];
+
+  if (role === 'user') {
+    sql = `INSERT INTO wsk_cats (cat_name, weight, owner, filename, birthdate) VALUES (?, ?, ?, ?, ?)`;
+
+    params = [cat_name, weight, currentUserId, filename, birthdate];
+  } else if (role === 'admin') {
+    sql = `INSERT INTO wsk_cats (cat_name, weight, owner, filename, birthdate) VALUES (?, ?, ?, ?, ?)`;
+
+    params = [cat_name, weight, owner, filename, birthdate];
+  }
+
+  const [rows] = await promisePool.execute(sql, params);
+
   console.log('rows', rows);
-  if (rows[0].affectedRows === 0) {
+  if (rows.affectedRows === 0) {
     return false;
   }
-  return {cat_id: rows[0].insertId};
+
+  return {cat_id: rows.insertId};
 };
 
 const modifyCat = async (id, cat, currentUserId, role) => {
   let sql = '';
 
   if (role === 'user') {
-    sql = promisePool.format(
+    sql = await promisePool.format(
       `UPDATE wsk_cats SET ? WHERE cat_id = ? AND owner = ?`,
       [cat, id, currentUserId]
     );
   } else if (role === 'admin') {
-    sql = promisePool.format(`UPDATE wsk_cats SET ? WHERE cat_id = ?`, [
+    sql = await promisePool.format(`UPDATE wsk_cats SET ? WHERE cat_id = ?`, [
       cat,
       id,
     ]);

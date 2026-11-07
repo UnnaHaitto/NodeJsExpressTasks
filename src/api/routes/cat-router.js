@@ -16,6 +16,8 @@ const upload = multer({dest: 'uploads/'});
 
 const catRouter = express.Router();
 
+catRouter.use(authenticateToken);
+
 // Kaikki /api/v1/cats reitit
 // reittikohtainen logger esimerkki
 //SAVE TO UPLOADS
@@ -24,12 +26,8 @@ catRouter
   .get(logger, getAllCats)
   .post(upload.single('file'), createThumbnail, postCat);
 // Kaikki /api/v1/cats/:id reitit
-catRouter
-  .route('/:id')
-  .get(authenticateToken, getCatById)
-  .delete(authenticateToken, deleteCat)
-  .put(authenticateToken, putCat);
-catRouter.route('/user/:userId').get(authenticateToken, getCatByUserId);
+catRouter.route('/:id').get(getCatById).delete(deleteCat).put(putCat);
+catRouter.route('/user/:userId').get(getCatByUserId);
 
 export default catRouter;
 

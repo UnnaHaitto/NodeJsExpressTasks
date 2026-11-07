@@ -10,8 +10,12 @@ import {
 const getAllCats = async (req, res) => {
   //console.log('ollaan nyt controllerissa');
 
+  const role = res.locals.user.role;
+
+  const user_id = res.locals.user.user_id;
+
   try {
-    const cats = await listAllCats();
+    const cats = await listAllCats(role, user_id);
     res.json(cats);
   } catch (error) {
     console.error('Error fetching cats: ', error);
@@ -51,7 +55,11 @@ const postCat = async (req, res) => {
   //console.log(req.file.filename);
   req.body.filename = req.file ? req.file.filename : req.body.filename;
 
-  const result = await addCat(req.body);
+  const role = res.locals.user.role;
+
+  const user_id = res.locals.user.user_id;
+
+  const result = await addCat(req.body, user_id, role);
   if (result) {
     res.status(201);
     res.json({message: 'New cat added.', result});
