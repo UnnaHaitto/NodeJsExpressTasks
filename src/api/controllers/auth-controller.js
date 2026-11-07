@@ -3,12 +3,13 @@ import bcrypt from 'bcrypt';
 import {findUserByUsername, addUser} from '../models/user-model.js';
 import 'dotenv/config';
 
-const postLogin = async (req, res) => {
+const postLogin = async (req, res, next) => {
   console.log('postLogin', req.body);
   const user = await findUserByUsername(req.body.username);
   if (!user) {
-    res.sendStatus(401);
-    return;
+    const newError = new Error('No user was found!');
+    newError.status = 401;
+    return next(newError);
   }
 
   console.log('Password hash exists:', !!user.password);
@@ -16,8 +17,9 @@ const postLogin = async (req, res) => {
   const passwordMatch = await bcrypt.compare(req.body.password, user.password);
 
   if (!passwordMatch) {
-    res.sendStatus(401);
-    return;
+    const newError = new Error("Password doesn't match");
+    newError.status = 401;
+    return next(newError);
   }
 
   const userWithNoPassword = {
@@ -34,13 +36,16 @@ const postLogin = async (req, res) => {
   res.json({user: userWithNoPassword, token});
 };
 
-const getMe = async (req, res) => {
+const getMe = async (req, res, next) => {
   console.log('getMe', res.locals.user);
-  if (res.locals.user) {
-    res.json({message: 'token ok', user: res.locals.user});
-  } else {
-    res.sendStatus(401);
+
+  if (!res.locals.user) {
+    const newError = new Error('User was not found');
+    newError.status = 401;
+    return next(newError);
   }
+
+  res.json({message: 'token ok', user: res.locals.user});
 };
 
 const postUser = async (req, res, next) => {
@@ -49,12 +54,12 @@ const postUser = async (req, res, next) => {
   if (!req.body) {
     const error = new Error('No user data!');
     error.status = 400;
-    next(error);
+    return next(error);
   }
 
-  const {name, username, email, passwd} = req.body;
+  const {name, username, email, password} = req.body;
 
-  const hashedPassword = await bcrypt.hash(passwd, 10);
+  const hashedPassword = await bcrypt.hash(password, 10);
 
   const userId = await addUser({
     name,
