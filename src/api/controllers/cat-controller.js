@@ -32,18 +32,14 @@ const getAllCats = async (req, res) => {
 };
 
 const getCatById = async (req, res) => {
+  const role = res.locals.user.role;
+
   const user_id = res.locals.user.user_id;
 
-  const cat = await findCatById(req.params.id);
+  const cat = await findCatById(req.params.id, user_id, role);
 
   if (!cat) {
     return res.status(404).json({message: 'Kissaa ei löytynyt!'});
-  }
-
-  if (user_id !== cat.owner) {
-    return res
-      .status(403)
-      .json({message: 'You do not have access to this cat.'});
   }
 
   res.json(cat);
