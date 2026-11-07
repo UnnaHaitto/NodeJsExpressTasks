@@ -88,7 +88,7 @@ const findUserByUsername = async (user) => {
 
   const [rows] = await promisePool.execute(sql, value);
 
-  if (rows.affectedRows === 0) {
+  if (rows.length === 0) {
     return false;
   }
 

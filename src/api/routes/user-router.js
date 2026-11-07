@@ -4,13 +4,12 @@ import {
   getUserById,
   deleteUser,
   setUser,
-  postUser,
 } from '../controllers/user-controller.js';
 import {authenticateToken} from '../middlewares/authentication.js';
 
 const userRouter = express.Router();
 
-userRouter.route('/').get(getAllUsers).post(postUser);
+userRouter.route('/').get(authenticateToken, getAllUsers);
 
 userRouter
   .route('/:id')
