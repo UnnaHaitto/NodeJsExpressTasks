@@ -10,7 +10,7 @@ GET {{apiUrl}}/cats/user/50
 Authorization: Bearer {{login.response.body.token}}
 
 ### get cat by id
-GET {{apiUrl}}/cats/50
+GET {{apiUrl}}/cats/1
 Authorization: Bearer {{login.response.body.token}}
 
 ### get cat by id (FAIL: not found)
@@ -275,4 +275,14 @@ Authorization: Bearer {{login.response.body.token}}
   "email": "test@example.com",
   "username": "testuser",
   "password": ""
+}
+
+### edit existing cat with wrong weight
+PUT {{apiUrl}}/cats/60
+Authorization: Bearer {{login.response.body.token}}
+Content-Type: application/json
+
+{
+    "weight": "l",
+    "owner": 54
 }
