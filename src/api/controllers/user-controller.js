@@ -9,6 +9,14 @@ import bcrypt from 'bcrypt';
 
 const getAllUsers = async (req, res) => {
   try {
+    const role = res.locals.user.role;
+
+    if (role !== 'admin') {
+      return res
+        .status(403)
+        .json({message: 'This function is only accessible by admins'});
+    }
+
     const users = await getUsers();
     res.json(users);
   } catch (error) {
@@ -18,23 +26,30 @@ const getAllUsers = async (req, res) => {
 };
 
 const getUserById = async (req, res) => {
+  const role = res.locals.user.role;
+
   const user_id = res.locals.user.user_id;
 
   const id = Number(req.params.id);
 
-  if (user_id !== id) {
+  if (user_id !== id && role !== 'admin') {
     return res
       .status(403)
       .json({message: 'You do not have access to this user.'});
   }
 
-  const user = await findUserById(id);
+  try {
+    const user = await findUserById(id);
 
-  if (!user) {
-    return res.status(404).json({message: 'The user was not found!'});
+    if (!user) {
+      return res.status(404).json({message: 'The user was not found!'});
+    }
+
+    res.json(user);
+  } catch (error) {
+    console.log('Error fetching users: ', error);
+    return res.status(500).json({message: 'Error fetching users'});
   }
-
-  res.json(user);
 };
 
 const deleteUser = async (req, res) => {
