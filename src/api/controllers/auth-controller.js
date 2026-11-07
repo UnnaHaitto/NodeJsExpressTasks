@@ -43,8 +43,14 @@ const getMe = async (req, res) => {
   }
 };
 
-const postUser = async (req, res) => {
+const postUser = async (req, res, next) => {
   console.log('request', req.body);
+
+  if (!req.body) {
+    const error = new Error('No user data!');
+    error.status = 400;
+    next(error);
+  }
 
   const {name, username, email, passwd} = req.body;
 
@@ -58,8 +64,8 @@ const postUser = async (req, res) => {
     role: 'user',
   });
 
-  if (!userId) {
-    return res.status(400).json({message: 'user registeration failed!'});
+  if (userId.error) {
+    return next(new Error(userId.error));
   }
 
   res.status(201).json({message: 'User added succesfully', User: userId});
