@@ -7,12 +7,12 @@ const listAllCats = async (role, currentUserId) => {
 
   if (role === 'user') {
     sql = promisePool.format(
-      'SELECT wsk_cats.*, wsk_users.name FROM wsk_cats INNER JOIN wsk_users ON wsk_cats.owner = wsk_users.user_id WHERE wsk_users.user_id = ?',
+      'SELECT wsk_cats.*, wsk_users.name AS owner_name FROM wsk_cats INNER JOIN wsk_users ON wsk_cats.owner = wsk_users.user_id WHERE wsk_users.user_id = ?',
       [currentUserId]
     );
   } else if (role === 'admin') {
     sql =
-      'SELECT wsk_cats.*, wsk_users.name FROM wsk_cats INNER JOIN wsk_users ON wsk_cats.owner = wsk_users.user_id';
+      'SELECT wsk_cats.*, wsk_users.name AS owner_name FROM wsk_cats INNER JOIN wsk_users ON wsk_cats.owner = wsk_users.user_id';
   }
   const [rows] = await promisePool.query(sql);
 
