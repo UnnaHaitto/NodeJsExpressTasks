@@ -7,7 +7,7 @@ import {
   catByUserId,
 } from '../models/cat-model.js';
 
-const getAllCats = async (req, res) => {
+const getAllCats = async (req, res, next) => {
   //console.log('ollaan nyt controllerissa');
 
   const role = res.locals.user.role;
@@ -19,7 +19,10 @@ const getAllCats = async (req, res) => {
     res.json(cats);
   } catch (error) {
     console.error('Error fetching cats: ', error);
-    res.status(500).json({message: 'Error while fetching cats'});
+
+    const newError = new Error('Error while fetching cats!');
+    newError.status = 500;
+    return next(newError);
   }
 
   // esimerkki siitä että middleware on muokannut req-oliota
@@ -31,7 +34,7 @@ const getAllCats = async (req, res) => {
   });*/
 };
 
-const getCatById = async (req, res) => {
+const getCatById = async (req, res, next) => {
   const role = res.locals.user.role;
 
   const user_id = res.locals.user.user_id;
@@ -39,7 +42,9 @@ const getCatById = async (req, res) => {
   const cat = await findCatById(req.params.id, user_id, role);
 
   if (!cat) {
-    return res.status(404).json({message: 'Kissaa ei löytynyt!'});
+    const error = new Error('No cat was found by that id!');
+    error.status = 404;
+    return next(error);
   }
 
   res.json(cat);
@@ -50,10 +55,16 @@ const postCat = async (req, res, next) => {
   console.log('request', req.body);
   //console.log(req.file.filename);
 
+  if (!req.body) {
+    const error = new Error('No cat data!');
+    error.status = 400;
+    return next(error);
+  }
+
   if (!req.file) {
     const error = new Error('Invalid or missing file!');
     error.status = 400;
-    next(error);
+    return next(error);
   }
 
   req.body.filename = req.file ? req.file.filename : req.body.filename;
@@ -80,20 +91,21 @@ const postCat = async (req, res, next) => {
   //res.status(201).json({message: 'Kissa lisätty', cat_id: id});
 };
 
-const deleteCat = async (req, res) => {
+const deleteCat = async (req, res, next) => {
   const role = res.locals.user.role;
 
   const user_id = res.locals.user.user_id;
 
   const result = await removeCat(Number(req.params.id), user_id, role);
-  if (result) {
-    res.json({message: 'Kissa poistettu'});
-  } else {
-    res.status(404).json({message: 'Kissaa ei löytynyt!'});
+
+  if (result.error) {
+    return next(new Error(result.error));
   }
+
+  res.json({message: 'Kissa poistettu'});
 };
 
-const putCat = async (req, res) => {
+const putCat = async (req, res, next) => {
   const role = res.locals.user.role;
 
   const user_id = res.locals.user.user_id;
@@ -105,28 +117,31 @@ const putCat = async (req, res) => {
     user_id,
     role
   );
-  if (result) {
-    res.json({message: 'Cat updated!'});
-  } else {
-    res.status(404).json({error: 404, message: 'Not found.'});
+
+  if (result.error) {
+    return next(new Error(result.error));
   }
+
+  res.json({message: 'Cat updated!'});
 };
 
-const getCatByUserId = async (req, res) => {
+const getCatByUserId = async (req, res, next) => {
   const user_id = res.locals.user.user_id;
 
   const given_user_id = Number(req.params.userId);
 
   if (user_id !== given_user_id) {
-    return res
-      .status(403)
-      .json({message: "You do not have access to this/these cat('s)."});
+    const error = new Error("You do not have access to this/these cat('s).");
+    error.status = 403;
+    return next(error);
   }
 
   const cat = await catByUserId(given_user_id);
 
   if (!cat) {
-    return res.status(404).json({message: 'No cats found by that user id'});
+    const error = new Error('No cats found by that user id!');
+    error.status = 404;
+    return next(error);
   }
 
   res.json(cat);
