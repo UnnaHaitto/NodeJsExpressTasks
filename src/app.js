@@ -9,6 +9,7 @@ import cors from 'cors';
 app.use(cors());
 
 app.use(express.static('public'));
+app.use('/uploads', express.static('uploads'));
 
 // middlewaret (myös express on sellainen) suoritetaan ennne reittejä
 app.use(requestTime);
