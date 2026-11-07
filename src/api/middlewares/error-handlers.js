@@ -7,6 +7,11 @@ const notFoundHandler = (req, res, next) => {
  * Custom default middleware for handling errors
  */
 const errorHandler = (err, req, res, next) => {
+  if (err.code === 'LIMIT_FILE_SIZE') {
+    err.message = 'File is too big! Max size is 10 MB';
+    err.status = 413;
+  }
+
   res.status(err.status || 500); // default is 500 if err.status is not defined
   res.json({
     error: {
