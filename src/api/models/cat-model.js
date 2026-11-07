@@ -47,22 +47,12 @@ const findCatById = async (id, currentUserId, role) => {
   return rows[0];
 };
 
-const addCat = async (cat, currentUserId, role) => {
-  const {cat_name, weight, owner, filename, birthdate} = cat;
+const addCat = async (cat, currentUserId) => {
+  const {cat_name, weight, filename, birthdate} = cat;
 
-  let sql = '';
+  const sql = `INSERT INTO wsk_cats (cat_name, weight, owner, filename, birthdate) VALUES (?, ?, ?, ?, ?)`;
 
-  let params = [];
-
-  if (role === 'user') {
-    sql = `INSERT INTO wsk_cats (cat_name, weight, owner, filename, birthdate) VALUES (?, ?, ?, ?, ?)`;
-
-    params = [cat_name, weight, currentUserId, filename, birthdate];
-  } else if (role === 'admin') {
-    sql = `INSERT INTO wsk_cats (cat_name, weight, owner, filename, birthdate) VALUES (?, ?, ?, ?, ?)`;
-
-    params = [cat_name, weight, owner, filename, birthdate];
-  }
+  const params = [cat_name, weight, currentUserId, filename, birthdate];
 
   const [rows] = await promisePool.execute(sql, params);
 
@@ -91,7 +81,7 @@ const modifyCat = async (id, cat, currentUserId, role) => {
 
   const [rows] = await promisePool.query(sql, params);
   console.log('rows', rows);
-  if (rows[0].affectedRows === 0) {
+  if (rows.affectedRows === 0) {
     return false;
   }
   return {message: 'success'};

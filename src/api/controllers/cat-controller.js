@@ -55,6 +55,13 @@ const postCat = async (req, res) => {
 
   const user_id = res.locals.user.user_id;
 
+  console.log('Values sent to addCat:', {
+    body: req.body,
+    user_id,
+    role,
+    filename: req.file?.filename,
+  });
+
   const result = await addCat(req.body, user_id, role);
   if (result) {
     res.status(201);
