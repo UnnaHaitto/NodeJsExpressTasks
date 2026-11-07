@@ -42,10 +42,10 @@ catRouter
   .get(getCatById)
   .delete(deleteCat)
   .put(
-    body('cat_name').optional().trim().isLength({min: 3, max: 50}),
-    body('weight').optional().trim().isFloat(),
-    body('owner').optional().trim().isInt(),
-    body('birthdate').optional().trim().isDate(),
+    body('cat_name').optional().trim().notEmpty().isLength({min: 3, max: 50}),
+    body('weight').optional().trim().notEmpty().isFloat(),
+    body('owner').optional().trim().notEmpty().isInt(),
+    body('birthdate').optional().trim().notEmpty().isDate(),
     validationErrors,
     putCat
   );
