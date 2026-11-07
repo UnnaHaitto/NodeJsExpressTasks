@@ -64,6 +64,8 @@ const postCat = async (req, res) => {
 };
 
 const deleteCat = async (req, res) => {
+  const role = res.locals.user.role;
+
   const user_id = res.locals.user.user_id;
 
   const cats_user_id = await getCatUserId(Number(req.params.id));
@@ -74,7 +76,7 @@ const deleteCat = async (req, res) => {
       .json({message: 'You do not have access to this cat.'});
   }
 
-  const result = await removeCat(Number(req.params.id), user_id);
+  const result = await removeCat(Number(req.params.id), user_id, role);
   if (result) {
     res.json({message: 'Kissa poistettu'});
   } else {
@@ -83,9 +85,11 @@ const deleteCat = async (req, res) => {
 };
 
 const putCat = async (req, res) => {
+  const role = res.locals.user.role;
+
   const user_id = res.locals.user.user_id;
 
-  const cats_user_id = await getCatUserId(Number(req.params.id), user_id);
+  const cats_user_id = await getCatUserId(Number(req.params.id));
 
   if (user_id !== cats_user_id) {
     return res
@@ -94,7 +98,12 @@ const putCat = async (req, res) => {
   }
 
   // in real life, all input data (req.body) should be validated before using it
-  const result = await modifyCat(Number(req.params.id), req.body);
+  const result = await modifyCat(
+    Number(req.params.id),
+    req.body,
+    user_id,
+    role
+  );
   if (result) {
     res.json({message: 'Cat updated!'});
   } else {
