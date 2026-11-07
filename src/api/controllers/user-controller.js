@@ -42,12 +42,11 @@ const deleteUser = async (req, res) => {
 
   const id = Number(req.params.id);
 
-  /*
   if (user_id !== id) {
     return res
       .status(403)
       .json({message: 'You do not have access to this user.'});
-  }*/
+  }
 
   const removed = await removeUser(id, user_id);
 
@@ -67,6 +66,10 @@ const setUser = async (req, res) => {
     return res
       .status(403)
       .json({message: 'You do not have access to this user.'});
+  }
+
+  if (req.body.password) {
+    req.body.password = bcrypt.hashSync(req.body.password, 10);
   }
 
   const set = await putUser(id, req.body);

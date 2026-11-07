@@ -91,7 +91,7 @@ Content-Type: application/json
 }
 
 ### change user details
-PUT {{apiUrl}}/users/50
+PUT {{apiUrl}}/users/53
 Authorization: Bearer {{login.response.body.token}}
 Content-Type: application/json
 
@@ -104,7 +104,7 @@ Content-Type: application/json
 }
 
 ### delete user by id
-DELETE {{apiUrl}}/users/49
+DELETE {{apiUrl}}/users/51
 Authorization: Bearer {{login.response.body.token}}
 
 ### Post login
@@ -113,7 +113,7 @@ POST {{apiUrl}}/auth/login
 Content-Type: application/json
 
 {
-  "username": "marjattaMattila",
+  "username": "marjattamikkola",
   "password": "password"
 }
 
