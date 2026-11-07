@@ -19,15 +19,19 @@ const findUserById = async (id) => {
   return rows[0];
 };
 
-const removeUser = async (id) => {
+const removeUser = async (id, currentUserId) => {
   const connection = await promisePool.getConnection();
 
   try {
     await connection.beginTransaction();
-    await connection.execute('DELETE FROM wsk_cats WHERE owner = ?;', [id]);
-    const sql = connection.format('DELETE FROM wsk_users WHERE user_id = ?;', [
-      id,
-    ]);
+    await connection.execute(
+      'DELETE FROM wsk_cats WHERE owner = ? AND owner = ?;',
+      [id, currentUserId]
+    );
+    const sql = connection.format(
+      'DELETE FROM wsk_users WHERE user_id = ? AND user_id = ?;',
+      [id, currentUserId]
+    );
 
     const [result] = await connection.execute(sql);
 

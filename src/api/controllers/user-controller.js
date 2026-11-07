@@ -42,13 +42,14 @@ const deleteUser = async (req, res) => {
 
   const id = Number(req.params.id);
 
+  /*
   if (user_id !== id) {
     return res
       .status(403)
       .json({message: 'You do not have access to this user.'});
-  }
+  }*/
 
-  const removed = await removeUser(id);
+  const removed = await removeUser(id, user_id);
 
   if (removed) {
     res.json({message: 'user item deleted.'});
