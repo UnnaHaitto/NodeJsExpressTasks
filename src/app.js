@@ -4,6 +4,9 @@ const app = express();
 const port = 3000;
 import router from './api/index.js';
 import requestTime from './api/middlewares/request-time.js';
+import cors from 'cors';
+
+app.use(cors());
 
 app.use(express.static('public'));
 
