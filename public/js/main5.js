@@ -31,7 +31,7 @@ const startApp = (logged) => {
   main.style.display = logged ? 'block' : 'none';
   userInfo.innerHTML = logged ? `Hello ${user.name}` : '';
   if (logged) {
-    if (user?.role > 0) {
+    if (user?.role !== 'admin') {
       userList.remove();
     }
     getCat();
@@ -46,7 +46,7 @@ const createCatCards = (cats) => {
   cats.forEach((cat) => {
     // create li with DOM methods
     const img = document.createElement('img');
-    img.src = imageUrl + cat.filename + '_thumb';
+    img.src = imageUrl + cat.filename + '_thumb.jpeg';
     img.alt = 'Image of a cat named ' + cat.cat_name;
     img.classList.add('resp');
 
