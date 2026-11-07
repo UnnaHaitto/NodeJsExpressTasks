@@ -70,11 +70,11 @@ const addUser = async (user) => {
   return {user_id: rows.insertId};
 };
 
-const putUser = async (id, content) => {
-  const sql = promisePool.format('UPDATE wsk_users SET ? WHERE user_id = ?', [
-    content,
-    id,
-  ]);
+const putUser = async (id, content, currentUserId) => {
+  const sql = promisePool.format(
+    'UPDATE wsk_users SET ? WHERE user_id = ? AND user_id = ?',
+    [content, id, currentUserId]
+  );
 
   const [rows] = await promisePool.execute(sql);
 

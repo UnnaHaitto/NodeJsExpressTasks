@@ -72,7 +72,7 @@ const setUser = async (req, res) => {
     req.body.password = bcrypt.hashSync(req.body.password, 10);
   }
 
-  const set = await putUser(id, req.body);
+  const set = await putUser(id, req.body, user_id);
 
   if (set) {
     res.json({message: 'User item updated.'});
