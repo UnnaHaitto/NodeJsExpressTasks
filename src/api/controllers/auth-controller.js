@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
-import {findUserByUsername} from '../models/user-model.js';
+import {findUserByUsername, addUser} from '../models/user-model.js';
 import 'dotenv/config';
 
 const postLogin = async (req, res) => {
@@ -10,6 +10,8 @@ const postLogin = async (req, res) => {
     res.sendStatus(401);
     return;
   }
+
+  console.log('Password hash exists:', !!user.password);
 
   const passwordMatch = await bcrypt.compare(req.body.password, user.password);
 
@@ -41,4 +43,30 @@ const getMe = async (req, res) => {
   }
 };
 
-export {postLogin, getMe};
+const postUser = async (req, res) => {
+  console.log('request', req.body);
+
+  const {name, username, email, passwd} = req.body;
+
+  const hashedPassword = await bcrypt.hash(passwd, 10);
+
+  const userId = await addUser({
+    name,
+    username,
+    email,
+    password: hashedPassword,
+    role: 'user',
+  });
+
+  if (!userId) {
+    return res.status(400).json({message: 'user registeration failed!'});
+  }
+
+  res.status(201).json({message: 'User added succesfully', User: userId});
+};
+
+const postLogout = (req, res) => {
+  res.json({message: 'Logout successfull!'});
+};
+
+export {postLogin, getMe, postUser, postLogout};

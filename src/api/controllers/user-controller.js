@@ -3,7 +3,6 @@ import {
   findUserById,
   removeUser,
   putUser,
-  addUser,
 } from '../models/user-model.js';
 import bcrypt from 'bcrypt';
 
@@ -100,14 +99,4 @@ const setUser = async (req, res) => {
   }
 };
 
-const postUser = async (req, res) => {
-  console.log('request', req.body);
-
-  req.body.password = bcrypt.hashSync(req.body.password, 10);
-
-  const userId = await addUser(req.body);
-
-  res.status(201).json({message: 'User added succesfully', User: userId});
-};
-
-export {getAllUsers, getUserById, deleteUser, setUser, postUser};
+export {getAllUsers, getUserById, deleteUser, setUser};
