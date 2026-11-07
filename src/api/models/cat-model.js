@@ -78,4 +78,25 @@ const catByUserId = async (userId) => {
   return rows;
 };
 
-export {listAllCats, findCatById, addCat, modifyCat, removeCat, catByUserId};
+const getCatUserId = async (cat_id) => {
+  const [rows] = await promisePool.execute(
+    'SELECT owner FROM wsk_cats WHERE cat_id = ?;',
+    [cat_id]
+  );
+
+  if (rows.length === 0) {
+    return false;
+  }
+
+  return rows[0].owner;
+};
+
+export {
+  listAllCats,
+  findCatById,
+  addCat,
+  modifyCat,
+  removeCat,
+  catByUserId,
+  getCatUserId,
+};

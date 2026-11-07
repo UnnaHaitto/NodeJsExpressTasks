@@ -5,6 +5,7 @@ import {
   modifyCat,
   listAllCats,
   catByUserId,
+  getCatUserId,
 } from '../models/cat-model.js';
 
 const getAllCats = async (req, res) => {
@@ -28,7 +29,15 @@ const getAllCats = async (req, res) => {
 };
 
 const getCatById = async (req, res) => {
+  const user_id = res.locals.user.user_id;
+
   const cat = await findCatById(req.params.id);
+
+  if (user_id !== cat.owner) {
+    return res
+      .status(403)
+      .json({message: 'You do not have access to this cat.'});
+  }
 
   if (!cat) {
     return res.status(404).json({message: 'Kissaa ei löytynyt!'});
@@ -55,6 +64,16 @@ const postCat = async (req, res) => {
 };
 
 const deleteCat = async (req, res) => {
+  const user_id = res.locals.user.user_id;
+
+  const cats_user_id = await getCatUserId(Number(req.params.id));
+
+  if (user_id !== cats_user_id) {
+    return res
+      .status(403)
+      .json({message: 'You do not have access to this cat.'});
+  }
+
   const result = await removeCat(Number(req.params.id));
   if (result) {
     res.json({message: 'Kissa poistettu'});
@@ -64,6 +83,16 @@ const deleteCat = async (req, res) => {
 };
 
 const putCat = async (req, res) => {
+  const user_id = res.locals.user.user_id;
+
+  const cats_user_id = await getCatUserId(Number(req.params.id));
+
+  if (user_id !== cats_user_id) {
+    return res
+      .status(403)
+      .json({message: 'You do not have access to this cat.'});
+  }
+
   // in real life, all input data (req.body) should be validated before using it
   const result = await modifyCat(Number(req.params.id), req.body);
   if (result) {
@@ -74,7 +103,17 @@ const putCat = async (req, res) => {
 };
 
 const getCatByUserId = async (req, res) => {
-  const cat = await catByUserId(req.params.userId);
+  const user_id = res.locals.user.user_id;
+
+  const given_user_id = Number(req.params.userId);
+
+  if (user_id !== given_user_id) {
+    return res
+      .status(403)
+      .json({message: "You do not have access to this/these cat('s)."});
+  }
+
+  const cat = await catByUserId(given_user_id);
 
   if (!cat) {
     return res.status(404).json({message: 'No cats found by that user id'});

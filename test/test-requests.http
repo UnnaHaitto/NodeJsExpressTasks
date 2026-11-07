@@ -6,10 +6,12 @@
 GET {{apiUrl}}/cats
 
 ### get cat by user id
-GET {{apiUrl}}/cats/user/43
+GET {{apiUrl}}/cats/user/50
+Authorization: Bearer {{login.response.body.token}}
 
 ### get cat by id
-GET {{apiUrl}}/cats/46
+GET {{apiUrl}}/cats/50
+Authorization: Bearer {{login.response.body.token}}
 
 ### get cat by id (FAIL: not found)
 GET {{apiUrl}}/cats/98
@@ -22,12 +24,13 @@ Content-Type: application/json
     "cat_name": "Rolle",
     "birthdate": "2022-10-10",
     "weight": 4,
-    "owner": "43",
+    "owner": "50",
     "filename": "https://placecats.com/310/240"
 }
 
 ### edit existing cat
-PUT {{apiUrl}}/cats/43
+PUT {{apiUrl}}/cats/53
+Authorization: Bearer {{login.response.body.token}}
 Content-Type: application/json
 
 {
@@ -36,7 +39,8 @@ Content-Type: application/json
 }
 
 ### delete cat by id
-DELETE {{apiUrl}}/cats/43
+DELETE {{apiUrl}}/cats/44
+Authorization: Bearer {{login.response.body.token}}
 
 ### post cat with image
 POST http://127.0.0.1:3000/api/v1/cats HTTP/1.1
@@ -71,7 +75,8 @@ Content-Type: image/jpeg
 GET {{apiUrl}}/users
 
 ### get user by id
-GET {{apiUrl}}/users/37
+GET {{apiUrl}}/users/50
+Authorization: Bearer {{login.response.body.token}}
 
 ### add new user
 POST {{apiUrl}}/users
@@ -85,8 +90,9 @@ Content-Type: application/json
 "role": "manager"
 }
 
-### change user details ////
-PUT {{apiUrl}}/users/43
+### change user details
+PUT {{apiUrl}}/users/50
+Authorization: Bearer {{login.response.body.token}}
 Content-Type: application/json
 
 {
@@ -97,8 +103,9 @@ Content-Type: application/json
 "role": "user"
 }
 
-### delete user by id ////
-DELETE {{apiUrl}}/users/48
+### delete user by id
+DELETE {{apiUrl}}/users/49
+Authorization: Bearer {{login.response.body.token}}
 
 ### Post login
 # @name login

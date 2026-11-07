@@ -29,7 +29,7 @@ catRouter
   .get(authenticateToken, getCatById)
   .delete(authenticateToken, deleteCat)
   .put(authenticateToken, putCat);
-catRouter.route('/user/:userId').get(getCatByUserId);
+catRouter.route('/user/:userId').get(authenticateToken, getCatByUserId);
 
 export default catRouter;
 
