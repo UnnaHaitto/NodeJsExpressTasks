@@ -74,7 +74,7 @@ const deleteCat = async (req, res) => {
       .json({message: 'You do not have access to this cat.'});
   }
 
-  const result = await removeCat(Number(req.params.id));
+  const result = await removeCat(Number(req.params.id), user_id);
   if (result) {
     res.json({message: 'Kissa poistettu'});
   } else {
@@ -85,7 +85,7 @@ const deleteCat = async (req, res) => {
 const putCat = async (req, res) => {
   const user_id = res.locals.user.user_id;
 
-  const cats_user_id = await getCatUserId(Number(req.params.id));
+  const cats_user_id = await getCatUserId(Number(req.params.id), user_id);
 
   if (user_id !== cats_user_id) {
     return res
