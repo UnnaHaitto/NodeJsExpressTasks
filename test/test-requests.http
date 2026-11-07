@@ -24,22 +24,22 @@ Content-Type: application/json
     "cat_name": "Rolle",
     "birthdate": "2022-10-10",
     "weight": 4,
-    "owner": "50",
+    "owner": "53",
     "filename": "https://placecats.com/310/240"
 }
 
 ### edit existing cat
-PUT {{apiUrl}}/cats/53
+PUT {{apiUrl}}/cats/60
 Authorization: Bearer {{login.response.body.token}}
 Content-Type: application/json
 
 {
     "weight": 6,
-    "owner": 37
+    "owner": 54
 }
 
 ### delete cat by id
-DELETE {{apiUrl}}/cats/44
+DELETE {{apiUrl}}/cats/60
 Authorization: Bearer {{login.response.body.token}}
 
 ### post cat with image
@@ -90,6 +90,18 @@ Content-Type: application/json
 "role": "manager"
 }
 
+### add new admin
+POST {{apiUrl}}/users
+Content-Type: application/json
+
+{
+"name": "Lotta Mattila",
+"username": "lottaMattila",
+"email": "lottam@metropolia.fi",
+"password": "password",
+"role": "admin"
+}
+
 ### change user details
 PUT {{apiUrl}}/users/53
 Authorization: Bearer {{login.response.body.token}}
@@ -107,13 +119,23 @@ Content-Type: application/json
 DELETE {{apiUrl}}/users/51
 Authorization: Bearer {{login.response.body.token}}
 
-### Post login
+### Post login user
 # @name login
 POST {{apiUrl}}/auth/login
 Content-Type: application/json
 
 {
   "username": "marjattamikkola",
+  "password": "password"
+}
+
+### Post login admin
+# @name login
+POST {{apiUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "username": "lottaMattila",
   "password": "password"
 }
 
