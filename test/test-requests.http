@@ -103,20 +103,16 @@ Content-Type: application/json
 }
 
 ### change user details
-PUT {{apiUrl}}/users/53
+PUT {{apiUrl}}/users/54
 Authorization: Bearer {{login.response.body.token}}
 Content-Type: application/json
 
 {
-"name": "Marjatta Mikkola",
-"username": "marjattamikkola",
-"email": "marjattam@metropolia.fi",
-"password": "password",
 "role": "user"
 }
 
 ### delete user by id
-DELETE {{apiUrl}}/users/51
+DELETE {{apiUrl}}/users/54
 Authorization: Bearer {{login.response.body.token}}
 
 ### Post login user

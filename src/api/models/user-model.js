@@ -19,19 +19,15 @@ const findUserById = async (id) => {
   return rows[0];
 };
 
-const removeUser = async (id, currentUserId) => {
+const removeUser = async (id) => {
   const connection = await promisePool.getConnection();
 
   try {
     await connection.beginTransaction();
-    await connection.execute(
-      'DELETE FROM wsk_cats WHERE owner = ? AND owner = ?;',
-      [id, currentUserId]
-    );
-    const sql = connection.format(
-      'DELETE FROM wsk_users WHERE user_id = ? AND user_id = ?;',
-      [id, currentUserId]
-    );
+    await connection.execute('DELETE FROM wsk_cats WHERE owner = ?;', [id]);
+    const sql = connection.format('DELETE FROM wsk_users WHERE user_id = ?;', [
+      id,
+    ]);
 
     const [result] = await connection.execute(sql);
 
@@ -70,11 +66,11 @@ const addUser = async (user) => {
   return {user_id: rows.insertId};
 };
 
-const putUser = async (id, content, currentUserId) => {
-  const sql = promisePool.format(
-    'UPDATE wsk_users SET ? WHERE user_id = ? AND user_id = ?',
-    [content, id, currentUserId]
-  );
+const putUser = async (id, content) => {
+  const sql = promisePool.format('UPDATE wsk_users SET ? WHERE user_id = ?', [
+    content,
+    id,
+  ]);
 
   const [rows] = await promisePool.execute(sql);
 

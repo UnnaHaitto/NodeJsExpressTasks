@@ -38,17 +38,19 @@ const getUserById = async (req, res) => {
 };
 
 const deleteUser = async (req, res) => {
+  const role = res.locals.user.role;
+
   const user_id = res.locals.user.user_id;
 
   const id = Number(req.params.id);
 
-  if (user_id !== id) {
+  if (user_id !== id && role !== 'admin') {
     return res
       .status(403)
       .json({message: 'You do not have access to this user.'});
   }
 
-  const removed = await removeUser(id, user_id);
+  const removed = await removeUser(id);
 
   if (removed) {
     res.json({message: 'user item deleted.'});
@@ -58,11 +60,13 @@ const deleteUser = async (req, res) => {
 };
 
 const setUser = async (req, res) => {
+  const role = res.locals.user.role;
+
   const user_id = res.locals.user.user_id;
 
   const id = Number(req.params.id);
 
-  if (user_id !== id) {
+  if (user_id !== id && role !== 'admin') {
     return res
       .status(403)
       .json({message: 'You do not have access to this user.'});
@@ -72,7 +76,7 @@ const setUser = async (req, res) => {
     req.body.password = bcrypt.hashSync(req.body.password, 10);
   }
 
-  const set = await putUser(id, req.body, user_id);
+  const set = await putUser(id, req.body);
 
   if (set) {
     res.json({message: 'User item updated.'});
