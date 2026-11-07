@@ -192,3 +192,87 @@ Content-Type: image/jpg
 
 < ./testikuva_12MiB.jpg
 --MyBoundary--
+
+### REGISTER: empty name (FAIL)
+POST {{apiUrl}}/auth/register
+Content-Type: application/json
+Authorization: Bearer {{login.response.body.token}}
+
+{
+  "name": "",
+  "email": "test@example.com",
+  "username": "testuser",
+  "password": "password123"
+}
+
+### REGISTER: invalid email (FAIL)
+POST {{apiUrl}}/auth/register
+Content-Type: application/json
+Authorization: Bearer {{login.response.body.token}}
+
+{
+  "name": "Test User",
+  "email": "not-an-email",
+  "username": "testuser",
+  "password": "password123"
+}
+
+### REGISTER: username too short (FAIL)
+POST {{apiUrl}}/auth/register
+Content-Type: application/json
+Authorization: Bearer {{login.response.body.token}}
+
+{
+  "name": "Test User",
+  "email": "test@example.com",
+  "username": "ab",
+  "password": "password123"
+}
+
+### REGISTER: username contains special characters (FAIL)
+POST {{apiUrl}}/auth/register
+Content-Type: application/json
+Authorization: Bearer {{login.response.body.token}}
+
+{
+  "name": "Test User",
+  "email": "test@example.com",
+  "username": "test_user!",
+  "password": "password123"
+}
+
+### REGISTER: username too long (FAIL)
+POST {{apiUrl}}/auth/register
+Content-Type: application/json
+Authorization: Bearer {{login.response.body.token}}
+
+{
+  "name": "Test User",
+  "email": "test@example.com",
+  "username": "abcdefghijklmnopqrstuvwxyz",
+  "password": "password123"
+}
+
+### REGISTER: password too short (FAIL)
+POST {{apiUrl}}/auth/register
+Content-Type: application/json
+Authorization: Bearer {{login.response.body.token}}
+
+{
+  "name": "Test User",
+  "email": "test@example.com",
+  "username": "testuser",
+  "password": "1234567"
+}
+
+### REGISTER: empty password (FAIL)
+POST {{apiUrl}}/auth/register
+Content-Type: application/json
+Authorization: Bearer {{login.response.body.token}}
+
+{
+  "name": "Test User",
+  "email": "test@example.com",
+  "username": "testuser",
+  "password": ""
+}

@@ -21,6 +21,16 @@ const upload = multer({
   },
 });
 
+const requireFile = (req, res, next) => {
+  if (!req.file) {
+    const error = new Error('A file is required!');
+    error.status = 400;
+    return next(error);
+  }
+
+  next();
+};
+
 const createThumbnail = async (req, res, next) => {
   if (!req.file) {
     next();
@@ -41,4 +51,4 @@ const createThumbnail = async (req, res, next) => {
   next();
 };
 
-export {createThumbnail, upload};
+export {createThumbnail, upload, requireFile};

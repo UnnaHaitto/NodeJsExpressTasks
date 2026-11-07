@@ -9,8 +9,10 @@ import {
 } from '../controllers/cat-controller.js';
 import logger from '../middlewares/logger.js';
 import {authenticateToken} from '../middlewares/authentication.js';
+import {body} from 'express-validator';
+import {validationErrors} from '../middlewares/error-handlers.js';
 
-import {createThumbnail, upload} from '../middlewares/upload.js';
+import {createThumbnail, upload, requireFile} from '../middlewares/upload.js';
 
 const catRouter = express.Router();
 
@@ -22,9 +24,31 @@ catRouter.use(authenticateToken);
 catRouter
   .route('/')
   .get(logger, getAllCats)
-  .post(upload.single('file'), createThumbnail, postCat);
+  .post(
+    upload.single('file'),
+    body('cat_name').trim().notEmpty().isLength({min: 3, max: 50}),
+    body('weight').trim().notEmpty().isFloat(),
+    body('owner').trim().notEmpty().isInt(),
+    body('birthdate').trim().notEmpty().isDate(),
+    requireFile,
+    validationErrors,
+    createThumbnail,
+    postCat
+  );
+
 // Kaikki /api/v1/cats/:id reitit
-catRouter.route('/:id').get(getCatById).delete(deleteCat).put(putCat);
+catRouter
+  .route('/:id')
+  .get(getCatById)
+  .delete(deleteCat)
+  .put(
+    body('cat_name').optional().trim().isLength({min: 3, max: 50}),
+    body('weight').optional().trim().isFloat(),
+    body('owner').optional().trim().isInt(),
+    body('birthdate').optional().trim().isDate(),
+    validationErrors,
+    putCat
+  );
 catRouter.route('/user/:userId').get(getCatByUserId);
 
 export default catRouter;
