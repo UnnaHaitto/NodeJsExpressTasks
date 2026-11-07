@@ -6,25 +6,28 @@ import {
 } from '../models/user-model.js';
 import bcrypt from 'bcrypt';
 
-const getAllUsers = async (req, res) => {
+const getAllUsers = async (req, res, next) => {
   try {
     const role = res.locals.user.role;
 
     if (role !== 'admin') {
-      return res
-        .status(403)
-        .json({message: 'This function is only accessible by admins'});
+      const error = new Error('This function is only accessible by admins');
+      error.status = 403;
+      return next(error);
     }
 
     const users = await getUsers();
     res.json(users);
   } catch (error) {
     console.error('Error fetching users: ', error);
-    res.status(500).json({message: 'Error fetching users'});
+
+    const newError = new Error('Error fetching users');
+    newError.status = 500;
+    return next(newError);
   }
 };
 
-const getUserById = async (req, res) => {
+const getUserById = async (req, res, next) => {
   const role = res.locals.user.role;
 
   const user_id = res.locals.user.user_id;
@@ -32,26 +35,29 @@ const getUserById = async (req, res) => {
   const id = Number(req.params.id);
 
   if (user_id !== id && role !== 'admin') {
-    return res
-      .status(403)
-      .json({message: 'You do not have access to this user.'});
+    const error = new Error('You do not have access to this user.');
+    error.status = 403;
+    return next(error);
   }
 
   try {
     const user = await findUserById(id);
 
     if (!user) {
-      return res.status(404).json({message: 'The user was not found!'});
+      const error = new Error('The user was not found!');
+      error.status = 404;
+      return next(error);
     }
-
     res.json(user);
   } catch (error) {
     console.log('Error fetching users: ', error);
-    return res.status(500).json({message: 'Error fetching users'});
+    const newError = new Error('Error fetching users');
+    newError.status = 500;
+    return next(newError);
   }
 };
 
-const deleteUser = async (req, res) => {
+const deleteUser = async (req, res, next) => {
   const role = res.locals.user.role;
 
   const user_id = res.locals.user.user_id;
@@ -59,21 +65,27 @@ const deleteUser = async (req, res) => {
   const id = Number(req.params.id);
 
   if (user_id !== id && role !== 'admin') {
-    return res
-      .status(403)
-      .json({message: 'You do not have access to this user.'});
+    const error = new Error('You do not have access to this user.');
+    error.status = 403;
+    return next(error);
   }
 
-  const removed = await removeUser(id);
+  try {
+    const removed = await removeUser(id);
 
-  if (removed) {
+    if (!removed) {
+      const error = new Error('The user was not found');
+      error.status = 404;
+      return next(error);
+    }
+
     res.json({message: 'user item deleted.'});
-  } else {
-    res.status(404).json({message: 'The user was not found'});
+  } catch (error) {
+    return next(error);
   }
 };
 
-const setUser = async (req, res) => {
+const setUser = async (req, res, next) => {
   const role = res.locals.user.role;
 
   const user_id = res.locals.user.user_id;
@@ -81,21 +93,27 @@ const setUser = async (req, res) => {
   const id = Number(req.params.id);
 
   if (user_id !== id && role !== 'admin') {
-    return res
-      .status(403)
-      .json({message: 'You do not have access to this user.'});
+    const error = new Error('You do not have access to this user.');
+    error.status = 403;
+    return next(error);
   }
 
   if (req.body.password) {
     req.body.password = bcrypt.hashSync(req.body.password, 10);
   }
 
-  const set = await putUser(id, req.body);
+  try {
+    const set = await putUser(id, req.body);
 
-  if (set) {
+    if (!set) {
+      const error = new Error('User was not found.');
+      error.status = 404;
+      return next(error);
+    }
+
     res.json({message: 'User item updated.'});
-  } else {
-    res.status(404).json({message: 'User was not found.'});
+  } catch (error) {
+    return next(error);
   }
 };
 
